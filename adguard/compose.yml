@@ -1,0 +1,33 @@
+services:
+    adguardhome:
+        container_name: adguardhome
+        restart: unless-stopped
+        volumes:
+            - ./workdir:/opt/adguardhome/work
+            - ./confdir:/opt/adguardhome/conf
+        ports:
+            - 10.7.0.2:53:53/tcp
+            - 10.7.0.2:53:53/udp
+            - 8080:80/tcp
+            - 8443:443/tcp
+            - 8443:443/udp
+            - 3000:3000/tcp
+            - 853:853/tcp
+            - 853:853/udp
+            - 5443:5443/tcp
+            - 5443:5443/udp
+            - 6060:6060/tcp
+        image: adguard/adguardhome:latest
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.adguardhome.rule=Host(`ad.catverse.dev`)"
+          - "traefik.http.routers.adguardhome.entrypoints=https"
+          - "traefik.http.routers.adguardhome.tls=true"
+          - "traefik.http.routers.adguardhome.tls.certresolver=cloudflare"
+          - "traefik.http.services.adguardhome.loadbalancer.server.port=3000"
+        networks:
+          - frontend
+
+networks:
+  frontend:
+    external: true

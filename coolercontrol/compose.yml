@@ -1,0 +1,9 @@
+services:
+    coolercontrold:
+      container_name: coolercontrold
+      privileged: true
+      ports:
+        - 11987:11987
+      volumes:
+        - /etc/coolercontrol:/etc/coolercontrol
+      image: coolercontrol/coolercontrold

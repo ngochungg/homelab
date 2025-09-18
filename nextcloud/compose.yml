@@ -1,0 +1,19 @@
+services:
+  all-in-one:
+    container_name: nextcloud-aio-mastercontainer
+    image: nextcloud/all-in-one:latest
+    restart: always
+    ports:
+      - "7000:80"
+      - "7080:8080"
+      - "6443:8443"
+    environment:
+      - APACHE_PORT=11000
+      - NEXTCLOUD_DATADIR=/srv/storage/nextcloud
+      - NEXTCLOUD_UPLOAD_LIMIT=10G
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+volumes:
+  nextcloud_aio_mastercontainer:
+    external: true
