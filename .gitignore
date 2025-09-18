@@ -1,0 +1,85 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Docker volumes and data directories
+*/data/
+*/volumes/
+*/backup/
+*/logs/
+
+# Configuration directories (often contain sensitive data)
+*/confdir/
+*/workdir/
+*/config/acme.json
+*/dynamic/
+
+# Service-specific ignores
+# AdGuard Home
+adguard/workdir/
+adguard/confdir/
+
+# Gitea
+gitea/gitea/
+gitea/.env
+
+# Nextcloud
+nextcloud/.env
+
+# Duplicati
+duplicati/duplicati/
+duplicati/.env
+
+# Traefik
+traefik/.env
+traefik/config/acme.json
+traefik/dynamic/
+
+# Minecraft
+minecraft/data/
+
+# MkDocs
+mkdocs/docs/
+mkdocs/mkdocs.yml
+
+# Backup directories
+backup/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# SSL certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Submodules with uncommitted changes
+# (This handles the stardew_valley submodule showing as dirty)
