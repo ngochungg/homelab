@@ -7,3 +7,4 @@ services:
       volumes:
         - /etc/coolercontrol:/etc/coolercontrol
       image: coolercontrol/coolercontrold
+      restart: unless-stopped
