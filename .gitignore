@@ -45,6 +45,13 @@ minecraft/data/
 mkdocs/docs/
 mkdocs/mkdocs.yml
 
+# Coder
+coder/
+!coder/compose.yml
+
+# PostgreSQL
+postgres/pgadmin/
+
 # Backup directories
 backup/
 
