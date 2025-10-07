@@ -4,28 +4,37 @@ services:
     container_name: mysql
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=Meou2002vn
-      - MYSQL_USER=cybercat
-      - MYSQL_PASSWORD=Meou2002vn
-      - MYSQL_DATABASE=mysql
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       - 3306:3306
     networks:
       - backend
     volumes:
       - /srv/database/mysql:/var/lib/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
 
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: phpmyadmin
     restart: always
     environment:
-      PMA_HOST: mysql
-      PMA_USER: root
-      PMA_PASSWORD: Meou2002vn
+      - PMA_HOST=${MYSQL_HOST}
+      - PMA_USER=${MYSQL_USER}
+      - PMA_PASSWORD=${MYSQL_PASSWORD}
     networks:
       - backend
       - frontend
+    env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.phpmyadmin.rule=Host(`mysql.catverse.dev`)"

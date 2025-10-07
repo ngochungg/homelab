@@ -46,7 +46,7 @@ mkdocs/docs/
 mkdocs/mkdocs.yml
 
 # Coder
-coder/
+coder/coder/
 !coder/compose.yml
 
 # PostgreSQL
