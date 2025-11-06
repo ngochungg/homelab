@@ -52,6 +52,9 @@ coder/coder/
 # PostgreSQL
 postgres/pgadmin/
 
+# Nextcloud
+nextcloud/nextcloud/
+
 # Backup directories
 backup/
 
