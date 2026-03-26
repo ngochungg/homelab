@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "@fontsource/roboto";
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0a0a0f;
+  color: #aebcb9;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.element-div-header {
+  font-weight: 600;
+  font-size: 4rem;
+}
+
+.element-div-p {
+  font-size: 1.2rem;
+}
+
+.menu_icon {
+  width: 1.2rem;
+  height: 0.188rem;
+  background-color: white;
+  margin: 0.125rem 0;
+}
+
+.menu-text {
+  font-size: 0.813rem;
+  font-weight: 900;
+  color: white;
+}

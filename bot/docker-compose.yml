@@ -1,0 +1,19 @@
+services:
+  discord-bot:
+    build: .
+    container_name: discord_bot
+    restart: always
+    network_mode: host
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /srv:/data/disk-sdb1:ro
+      - /srv/cracking/cap:/data/disk-sdb1/cracking/cap:ro
+      - /srv/cracking/wordlist:/data/disk-sdb1/cracking/wordlist:ro
+      - /hdd/storage:/data/disk-sdc1:ro
+      - /root/.sliver/logs/sliver.log:/data/logs/sliver.log:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    pid: "host"

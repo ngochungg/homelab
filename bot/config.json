@@ -1,0 +1,11 @@
+{
+  "disks": [
+    {"name": "Root (/)", "path": "/", "threshold": 90},
+    {"name": "HDD 1TB", "path": "/data/disk-sdb1", "threshold": 95},
+    {"name": "HDD 3.6TB", "path": "/data/disk-sdc1", "threshold": 85}
+  ],
+  "system": {
+    "cpu_threshold": 90,
+    "ram_threshold": 85
+  }
+}
