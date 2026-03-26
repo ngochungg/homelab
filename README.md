@@ -1,63 +1,106 @@
-# Homelab
+# homelab
 
-This repository contains Docker Compose stacks for the homelab services I run.
-Most “web” services are exposed via `traefik/` (Traefik) and Cloudflare, using the `catverse.dev` domain.
+This repo is a collection of Docker Compose stacks for the services in this homelab.
+Most HTTP(S) services are exposed via `traefik/` and Cloudflare tunnels, under the `catverse.dev` domain.
 
-## Prerequisites
+## What to do (recommended order)
 
-- Docker Engine + Docker Compose v2
-- An external docker network named `frontend`
-- (Optional, but required by some stacks) an external docker network named `backend`
-- (For Traefik) a `.env` file inside `traefik/` with:
-  - `TRAEFIK_DASHBOARD_CREDENTIALS`
-  - `CF_DNS_API_TOKEN`
-  - `TUNNEL_TOKEN`
-
-## Quick start
-
-1. Create the external networks (run once):
+1. Create the external Docker networks (once on the host):
 
 ```bash
 docker network create frontend
 docker network create backend
 ```
 
-2. Start Traefik first:
+2. Create the required `.env` files (see the next section).
+
+3. Start Traefik first (required for most domain-based URLs):
 
 ```bash
-(cd traefik && docker compose up -d)
+cd traefik
+docker compose up -d
 ```
 
-3. Start any other service stack from its directory:
+4. Start databases first (because some apps depend on them):
 
 ```bash
-(cd adguard && docker compose up -d)
+cd mysql
+docker compose up -d
+
+cd postgres
+docker compose up -d
 ```
 
-## Services
+5. Start the rest of the stacks (each in its own directory):
 
-- `traefik/`: Traefik reverse proxy + Cloudflare tunnel
-  - Traefik dashboard: `https://traefik.catverse.dev`
-- `adguard/`: AdGuard Home DNS filtering
-  - Web UI: `https://ad.catverse.dev`
-  - DNS listens on the host IP configured in `adguard/compose.yml` (currently `10.7.0.2`)
-- `nginx/`: Nginx (Traefik-exposed example)
-  - `https://nginx.catverse.dev`
-- `mysql/`: MySQL + phpMyAdmin
-  - `https://mysql.catverse.dev`
-- `postgres/`: PostgreSQL + pgAdmin
-  - `https://pgadmin.catverse.dev`
-- `duplicati/`: Duplicati backups
-  - `https://backup.catverse.dev`
-- `gitea/`: Gitea + Gitea runner
-  - `https://git.catverse.dev`
-- `portainer/`: Portainer CE
-  - `https://portal.catverse.dev`
-- `minecraft/`: Minecraft server (direct ports, not Traefik-based)
-- `coolercontrol/`: coolercontrol hardware agent
-- `stardew_valley/stardew-multiplayer-docker/`: Stardew Valley multiplayer docker project (see its `README.md`)
+```bash
+cd gitea && docker compose up -d
+cd portainer && docker compose up -d
+cd duplicati && docker compose up -d
+cd adguard && docker compose up -d
+cd nginx && docker compose up -d
+cd minecraft && docker compose up -d
+cd coolercontrol && docker compose up -d
+cd bot && docker compose up -d
+```
 
-## Notes
+Note: Stardew Valley has its own setup requirements and is best followed via its sub-README:
+`stardew_valley/stardew-multiplayer-docker/README.md`.
 
-- Many `compose.yml` files expect the external `frontend` network so Traefik can route traffic.
-- Services that use environment variables will need those set either in each directory’s `.env` (if referenced) or via your shell environment.
+## Which `.env` goes where (and what keys)
+
+Docker Compose will read `.env` in the same directory as the `compose.yml` for variable substitution (where those `${VAR}` placeholders exist).
+Some stacks also reference `.env` explicitly using `env_file`.
+
+`traefik/.env` (required)
+- `TRAEFIK_DASHBOARD_CREDENTIALS` (basic auth for dashboard, usually `user:pass`)
+- `CF_DNS_API_TOKEN` (Cloudflare DNS provider token for the ACME challenge)
+- `TUNNEL_TOKEN` (Cloudflare tunnel token)
+
+`bot/.env` (required if you run the Discord bot)
+- `DISCORD_TOKEN`
+- `MY_GUILD_ID`
+- `ADMIN_ID`
+- `NOTIFICATION_CHANNEL_ID`
+- `GOOGLE_API_KEY`
+
+`mysql/.env` (required for MySQL + phpMyAdmin)
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
+- `MYSQL_DATABASE`
+- `MYSQL_HOST` (what phpMyAdmin should connect to; usually `mysql` or `mysql:3306`)
+
+`postgres/.env` (required for PostgreSQL + pgAdmin)
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+
+`duplicati/.env` (required for backups)
+- `SETTINGS_ENCRYPTION_KEY`
+- `DUPLICATI__WEBSERVICE_PASSWORD`
+
+`gitea/.env` (required if you run the Gitea runner)
+- `GITEA_RUNNER_REGISTRATION_TOKEN`
+
+`stardew_valley/stardew-multiplayer-docker/.env` (required for Steam build automation)
+- `STEAM_USER`
+- `STEAM_PASS`
+- `STEAM_GUARD`
+
+Optional Stardew env vars
+- Many other mod settings are referenced as `${VAR-default}` in `stardew_valley/.../compose.yml`; you can omit them if you want the defaults.
+
+## Service URLs
+
+- Traefik dashboard: `https://traefik.catverse.dev`
+- AdGuard Home UI: `https://ad.catverse.dev`
+- Nginx example UI: `https://nginx.catverse.dev`
+- MySQL: `https://mysql.catverse.dev` (phpMyAdmin)
+- PostgreSQL: `https://pgadmin.catverse.dev`
+- Duplicati: `https://backup.catverse.dev`
+- Gitea: `https://git.catverse.dev`
+- Portainer: `https://portal.catverse.dev`
+
+DNS note: AdGuard DNS listens on the host IP/ports defined in `adguard/compose.yml` (currently mapped to `10.7.0.2`).
+
