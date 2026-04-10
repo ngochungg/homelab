@@ -83,10 +83,9 @@ class THMStats(commands.Cog):
                     embed.add_field(name="Level", value=f"Level {data.get('level', 0)}", inline=True)
                     embed.add_field(name="Rooms Done", value=f"✅ {data.get('completedRoomsNumber', 0)}", inline=True)
                     embed.add_field(name="Badges", value=f"🏅 {data.get('badgesNumber', 0)}", inline=True)
-                    
-                    # Subscription status check
-                    is_premium = "🟡 Premium" if data.get('subscribed') else "⚪ Free Tier"
-                    embed.set_footer(text=f"Account Status: {is_premium} | Node: Dell Lab Operator")
+                    embed.add_field(name="League Tier", value=f"🏆 {data.get('leagueTier', 'N/A')}", inline=True)
+
+                    print(f"DATA: {data}")
 
                     # 5. SEND FINAL RESPONSE
                     await interaction.followup.send(embed=embed)

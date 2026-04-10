@@ -12,6 +12,7 @@ from cogs.utils.ANSI_erase import ANSI_erase
 
 PATH_CAP = os.getenv("CAP_FILE_PATH")
 PATH_WORDLIST = os.getenv("WORDLIST_PATH")
+ADMIN_ID = int(os.getenv('ADMIN_ID', 0))
 
 class AircrackView(discord.ui.View):
     def __init__(self, process, interaction):
@@ -85,6 +86,17 @@ class Aircrack(commands.Cog):
     @app_commands.autocomplete(cap_file=cap_file_autocomplete)
     @app_commands.autocomplete(wordlist=wordlist_autocomplete)
     async def aircrack(self,interaction: discord.Interaction, cap_file: str = None, wordlist: str = None):
+
+        # 1. Admin Check
+        if interaction.user.id != ADMIN_ID:
+            embed = NotificationMsg.error_msg(
+                title="Permission Denied",
+                description="You don't have permission to manage Docker containers."
+            )
+            
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        # 2. Defer the interaction
         await interaction.response.defer(thinking=True)
 
         full_cap = os.path.join(self.path_cap, cap_file)

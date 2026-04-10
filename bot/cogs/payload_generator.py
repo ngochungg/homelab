@@ -5,6 +5,8 @@ from discord.ext import commands
 
 from cogs.utils.notification_msg import NotificationMsg
 
+ADMIN_ID = int(os.getenv('ADMIN_ID', 0))
+
 class PayloadGenerator(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,9 +24,18 @@ class PayloadGenerator(commands.Cog):
         app_commands.Choice(name="Socat (Full TTY)", value="socat")
     ])
     async def payload_generator(self, interaction: discord.Interaction, lhost: str, lport: int, shell_type: str = "python"):
+
+        # Admin Check
+        if interaction.user.id != ADMIN_ID:
+            embed = NotificationMsg.error_msg(
+                title="Permission Denied",
+                description="You don't have permission to manage Docker containers."
+            )
+            
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
         
         # Prevent interaction timeout
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.defer()
 
         # Generate the payload
         shells = {
