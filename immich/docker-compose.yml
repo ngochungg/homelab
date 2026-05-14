@@ -11,24 +11,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
-    ports:
-      - '2283:2283'
     depends_on:
       - redis
       - database
     restart: always
     healthcheck:
       disable: false
-    networks:
-      - frontend
-      - backend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.immich-server.rule=Host(`photos.catverse.dev`)"
-      - "traefik.http.routers.immich-server.entrypoints=https"
-      - "traefik.http.routers.immich-server.tls=true"
-      - "traefik.http.routers.immich-server.tls.certresolver=cloudflare"
-      - "traefik.http.services.immich-server.loadbalancer.server.port=2283"
+    ports:
+      - "2283:2283"
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -45,8 +35,6 @@ services:
     restart: always
     healthcheck:
       disable: false
-    networks:
-      - backend
 
   redis:
     container_name: immich_redis
@@ -54,8 +42,6 @@ services:
     healthcheck:
       test: redis-cli ping || exit 1
     restart: always
-    networks:
-      - backend
 
   database:
     container_name: immich_postgres
@@ -72,13 +58,6 @@ services:
       - ${DB_DATA_LOCATION}:/var/lib/postgresql/data
     shm_size: 128mb
     restart: always
-    networks:
-      - backend
 
 volumes:
   model-cache:
-networks:
-  frontend:
-    external: true
-  backend:
-    external: true
