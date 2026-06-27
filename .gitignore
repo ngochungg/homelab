@@ -93,3 +93,6 @@ Thumbs.db
 
 # Submodules with uncommitted changes
 # (This handles the stardew_valley submodule showing as dirty)
+
+# Ignore the .stfolder file in submodules
+.stfolder/
