@@ -1,0 +1,21 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    environment:
+      - DOMAIN=https://vault.catverse.dev
+      - ADMIN_TOKEN=${ADMIN_TOKEN}
+      - SIGNUPS_ALLOWED=false
+      - INVITATIONS_ALLOWED=true
+      - SHOW_PASSWORD_HINT=false
+      - ROCKET_LIMITS={json=10485760}
+      - LOG_FILE=/data/vaultwarden.log
+      - LOG_LEVEL=warn
+    volumes:
+      - /hdd/docker/data/vaultwarden/vw_data:/data
+    ports:
+      - "8880:80"
+    restart: unless-stopped
+
+volumes:
+  vw_data:

@@ -4,15 +4,8 @@ services:
         tty: true
         container_name: cyberchef
         image: ghcr.io/gchq/cyberchef:latest
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.cyberchef.rule=Host(`cyberchef.catverse.dev`)"
-            - "traefik.http.routers.cyberchef.entrypoints=https"
-            - "traefik.http.routers.cyberchef.tls=true"
-            - "traefik.http.routers.cyberchef.tls.certresolver=cloudflare"
-            - "traefik.http.services.cyberchef.loadbalancer.server.port=80"
-        networks:
-            - frontend
+        ports:
+          - 8070:8080
         restart: unless-stopped
         healthcheck:
             test: ["CMD", "curl", "-f", "http://cyberchef.catverse.dev/health"]
@@ -20,7 +13,3 @@ services:
             timeout: 5s
             retries: 5
             start_period: 20s
-
-networks:
-  frontend:
-    external: true

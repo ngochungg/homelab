@@ -1,0 +1,5 @@
+# This directory is a Syncthing folder marker.
+# Do not delete.
+
+folderID: Meo_Docs
+created: 2026-06-06T07:38:06Z
